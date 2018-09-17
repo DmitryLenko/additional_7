@@ -4,16 +4,19 @@ module.exports = function solveSudoku(matrix) {
         if(matrix[row][col] === 0) {
           for (let number = 1; number <= 9; number++) {
             if (checkInRow(number, row, matrix)  &&  checkInColumn(number, col, matrix)  &&  CheckInBox(matrix , col, row, number)) {
-              console.log(row,col,number)
-              console.log('----------------------')
               matrix[row][col] = number;
-              
+              if(solveSudoku(matrix)) {
+                return matrix;
+              } else {
+                matrix[row][col] = 0;
+              }
             }
           }  
+          return false;   
         };
       };
-    };   
-    console.log(matrix);
+    };
+    return true;
 };
 
 function checkInRow(number, row, matrix) {
@@ -36,13 +39,13 @@ function checkInColumn(number, col, matrix) {
 
 function CheckInBox(matrix , col, row, number) {
   var r = row - row % 3;
-		var c = col - col % 3;
-		for (let i = r; i < r + 3; i++) {
-      for (let j = c; j < c + 3; j++) {
-        if (matrix[i][j] === number) {
-          return false;
-        }
+  var c = col - col % 3;
+  for (let i = r; i < r + 3; i++) {
+    for (let j = c; j < c + 3; j++) {
+      if (matrix[i][j] === number) {
+        return false;
       }
     }
+  }
   return true;	
 }
